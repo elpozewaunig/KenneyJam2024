@@ -1,6 +1,7 @@
-[gd_scene load_steps=33 format=3 uid="uid://dc7aktr1f5opg"]
+[gd_scene load_steps=34 format=3 uid="uid://dc7aktr1f5opg"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_gyboe"]
+[ext_resource type="Script" path="res://scripts/SwipeInputHandler.gd" id="3_0of4x"]
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="3_16twk"]
 [ext_resource type="Texture2D" uid="uid://bv2en2yvl0kvo" path="res://assets/sprites/vignette.png" id="3_74b6m"]
 [ext_resource type="Texture2D" uid="uid://crf3x1a6mm6b5" path="res://assets/sprites/player.png" id="3_oj2jm"]
@@ -89,6 +90,9 @@ script = ExtResource("1_gyboe")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("3_16twk")
+
+[node name="SwipeInputHandler" type="Node2D" parent="Camera2D"]
+script = ExtResource("3_0of4x")
 
 [node name="Vignette" type="Sprite2D" parent="Camera2D"]
 texture = ExtResource("3_74b6m")
@@ -336,3 +340,6 @@ volume_db = -15.0
 [connection signal="end_reached" from="." to="." method="_on_end_reached"]
 [connection signal="end_reached" from="." to="Camera2D/TimerDisplay" method="_on_player_end_reached"]
 [connection signal="enemy_end_reached" from="." to="Camera2D/TimerDisplay" method="_on_enemy_end_reached"]
+[connection signal="swipe_left" from="Camera2D/SwipeInputHandler" to="." method="_on_swipe_left"]
+[connection signal="swipe_right" from="Camera2D/SwipeInputHandler" to="." method="_on_swipe_right"]
+[connection signal="swipe_up" from="Camera2D/SwipeInputHandler" to="." method="_on_swipe_up"]

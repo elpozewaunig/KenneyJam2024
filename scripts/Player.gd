@@ -13,6 +13,10 @@ var game_over = false
 
 var last_section = ""
 
+var swipe_left = false
+var swipe_right = false
+var swipe_up = false
+
 signal force_next_choice(branch)
 signal choice_btn_pressed(btn)
 signal enemy_end_reached(time)
@@ -83,15 +87,15 @@ func _process(delta):
 		
 		# Set the branch to proceed to based on input
 		if allow_choice:
-			if Input.is_action_just_pressed("ui_up") and branches.has("SChild"):
+			if Input.is_action_just_pressed("ui_up") or swipe_up  and branches.has("SChild"):
 				branch_choice = "SChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.up)
-			elif Input.is_action_just_pressed("ui_left") and branches.has("LChild"):
+			elif Input.is_action_just_pressed("ui_left") or swipe_left and branches.has("LChild"):
 				branch_choice = "LChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.left)
-			elif Input.is_action_just_pressed("ui_right") and branches.has("RChild"):
+			elif Input.is_action_just_pressed("ui_right") or swipe_right and branches.has("RChild"):
 				branch_choice = "RChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.right)
@@ -124,7 +128,7 @@ func _process(delta):
 	camera.zoom.y = 1 / (speed * zoom_fact + 0.5) * game_manager.tick_speed
 	
 	# Switch to left or right lane on input
-	if Input.is_action_just_pressed("ui_left") and !lane_lock:
+	if Input.is_action_just_pressed("ui_left") or swipe_left and !lane_lock:
 		if current_lane > 0:
 			current_lane -= 1
 			var last_global_x = camera.global_position.x
@@ -132,7 +136,7 @@ func _process(delta):
 			camera.transition_from_x(last_global_x)
 			sound.lane_switch_left.play()
 			
-	if Input.is_action_just_pressed("ui_right") and !lane_lock:
+	if Input.is_action_just_pressed("ui_right") or swipe_right and !lane_lock:
 		if current_lane < lane_count - 1:
 			current_lane += 1
 			var last_global_x = camera.global_position.x
@@ -140,6 +144,8 @@ func _process(delta):
 			camera.transition_from_x(last_global_x)
 			sound.lane_switch_right.play()
 			
+	reset_swipes()
+	
 	if game_over:
 		# Show game over screen
 		game_over_screen.show()
@@ -147,6 +153,7 @@ func _process(delta):
 		if game_over_screen.modulate.a > 1:
 			game_over_screen.modulate.a = 1
 			
+
 func _on_no_choice_made():
 	emit_signal("force_next_choice", branch_choice)
 	emit_signal("choice_btn_pressed", controls.up)
@@ -166,3 +173,18 @@ func _on_dead_end_reached():
 	
 func _on_enemy_dead_end_reached():
 	sound.lose.play()
+
+
+func _on_swipe_left():
+	swipe_left = true
+
+func _on_swipe_right():
+	swipe_right = true
+
+func _on_swipe_up():
+	swipe_up = true
+	
+func reset_swipes():
+	swipe_left = false
+	swipe_right = false
+	swipe_up = false
