@@ -87,15 +87,15 @@ func _process(delta):
 		
 		# Set the branch to proceed to based on input
 		if allow_choice:
-			if Input.is_action_just_pressed("ui_up") or swipe_up  and branches.has("SChild"):
+			if (Input.is_action_just_pressed("ui_up") or swipe_up)  and branches.has("SChild"):
 				branch_choice = "SChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.up)
-			elif Input.is_action_just_pressed("ui_left") or swipe_left and branches.has("LChild"):
+			elif (Input.is_action_just_pressed("ui_left") or swipe_left) and branches.has("LChild"):
 				branch_choice = "LChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.left)
-			elif Input.is_action_just_pressed("ui_right") or swipe_right and branches.has("RChild"):
+			elif (Input.is_action_just_pressed("ui_right") or swipe_right) and branches.has("RChild"):
 				branch_choice = "RChild"
 				emit_signal("force_next_choice", branch_choice)
 				emit_signal("choice_btn_pressed", controls.right)
